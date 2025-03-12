@@ -26,8 +26,8 @@ export default function useAuth() {
     try {
       const response = await Login({ email, password });
       // 🔹 Salva o token no SecureStore
-      if (!response?.data.token) throw new Error("Token not found");
-      const { token } = response.data;
+      if (!response?.data.accessToken) throw new Error("Token not found");
+      const { accessToken: token } = response.data;
       let roleJWT = undefined;
       try {
         const { role }: any = jwtDecode(token);

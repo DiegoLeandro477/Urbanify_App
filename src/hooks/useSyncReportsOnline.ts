@@ -9,23 +9,21 @@ import requestHTPP from "@/utils/requestAxios";
 import useAsyncStorage from "@/hooks/useSyncStorage";
 
 const useSyncReportsOnline = () => {
-  const XANO_REPORT = process.env.EXPO_PUBLIC_XANO_REPORT || "";
   const { GET, POST_FormData } = requestHTPP();
   const { getToken } = useAsyncStorage();
   const getStatusReportOn = async (report: Report) => {
-    let status: StatusEnumType | undefined = undefined;
+    let status: StatusEnumType | undefined = StatusEnum.REPORTADO;
     try {
       console.log(`Obtendo dados do Report: id->[${report.id}]`);
 
       const token = await getToken();
       if (!token) return;
 
-      // const url = `/report/status/address/${report.address}/geohash/${report.geohash}`;
-      const url = `${XANO_REPORT}/report/${report.id}`;
+      const url = `/report/status/address/${report.address}/geohash/${report.geohash}`;
       const response = await GET(url);
       console.log("res -> ", response?.data);
       if (!response) return;
-      status = StatusEnum[response?.data.status as keyof typeof StatusEnum];
+      status = response?.data.status;
     } catch (error) {
       console.error("[DATABASE] error: ", error);
     } finally {
@@ -68,7 +66,7 @@ const useSyncReportsOnline = () => {
         throw new Error("No valid image provided.");
       }
       // Envia os dados para o Xano
-      const response = await POST_FormData(`${XANO_REPORT}/report`, formData);
+      const response = await POST_FormData(`/report`, formData);
 
       if (!response) return;
       console.log("[DATABASE]: ", JSON.stringify(response.data));

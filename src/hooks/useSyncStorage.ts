@@ -1,13 +1,10 @@
-
-
-
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
 
 export default function useAsyncStorage() {
-  const secret_token = process.env.EXPO_PUBLIC_URBANIFY_SECRET_TOKEN!
-  const storage_reports = process.env.EXPO_PUBLIC_URBANIFY_STORAGE_REPORTS!
-  
+  const secret_token = process.env.EXPO_PUBLIC_URBANIFY_SECRET_TOKEN!;
+  const storage_reports = process.env.EXPO_PUBLIC_URBANIFY_STORAGE_REPORTS!;
+
   const getRole = async () => {
     try {
       return await AsyncStorage.getItem("role");
@@ -24,27 +21,29 @@ export default function useAsyncStorage() {
     }
   };
 
-  const getToken = async (): Promise<string> => {
+  const getTokens = async () => {
     try {
-      return await SecureStore.getItemAsync(secret_token) || "";
+      const tokenData = await SecureStore.getItemAsync(secret_token);
+      return tokenData ? JSON.parse(tokenData) : null;
     } catch (err) {
-      console.error("[TOKEN]: ", err);
-      return "";
+      console.error("[TOKEN ERROR]: ", err);
+      return null;
     }
   };
 
-  const setToken = async (token: string) => {
+  const setTokens = async (accessToken: string, refreshToken: string) => {
     try {
-      await SecureStore.setItemAsync(secret_token, token);
+      const tokenData = { accessToken, refreshToken };
+      await SecureStore.setItemAsync(secret_token, JSON.stringify(tokenData));
     } catch (err) {
-      console.log("[TOKEN]: ", err);
+      console.error("[TOKEN ERROR]: ", err);
     }
-  }
+  };
 
   return {
     getRole,
     setRole,
-    getToken,
-    setToken,
+    getTokens,
+    setTokens,
   };
 }

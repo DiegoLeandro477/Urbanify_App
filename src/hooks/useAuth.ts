@@ -14,7 +14,7 @@ export default function useAuth() {
   const [errorEmailOrPassword, setErrorEmailOrPassword] =
     useState<boolean>(false);
   const { Login } = requestAxios();
-  const { setRole, setToken } = useAsyncStorage();
+  const { setRole, setTokens } = useAsyncStorage();
 
   const signIn = async () => {
     if (!email || !password) {
@@ -27,19 +27,14 @@ export default function useAuth() {
       const response = await Login({ email, password });
       // 🔹 Salva o token no SecureStore
       if (!response?.data.accessToken) throw new Error("Token not found");
-      const { accessToken: token } = response.data;
-      let roleJWT = undefined;
+      const { accessToken, refreshToken } = response.data;
       try {
-        const { role }: any = jwtDecode(token);
-        roleJWT = role;
+        const { role }: any = jwtDecode(accessToken);
+        await setRole(role);
       } catch (err) {
-        console.log("Erro ao extrair Role do Token: ", err);
-        roleJWT = response.data.role;
+        console.log("Erro ao extrair role do Token: ", err);
       }
-      await setToken(token);
-
-      console.log("[ROLE] -> ", roleJWT);
-      await setRole(roleJWT);
+      await setTokens(accessToken, refreshToken);
       setErrorEmailOrPassword(false);
       router.navigate("/(auth)");
     } catch (err) {

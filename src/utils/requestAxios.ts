@@ -4,7 +4,7 @@ import axios from "axios";
 export default function AxiosHTTP() {
   const API_URL = process.env.EXPO_PUBLIC_URBANIFY_API;
   const XANO_EXTEND = process.env.EXPO_PUBLIC_XANO_LOGIN || "";
-  const { getToken } = useAsyncStorage();
+  const { getTokens } = useAsyncStorage();
 
   const Login = async (data: any) => {
     try {
@@ -21,12 +21,13 @@ export default function AxiosHTTP() {
   };
 
   const POST = async (url: string, data: any) => {
-    const token = await getToken();
+    const { accessToken } = await getTokens();
     try {
+      if (!accessToken) throw Error("Token nao encontrado");
       return await axios.post(`${API_URL}${url}`, data, {
         headers: {
           Accept: "application/json", // Aceitar resposta em JSON
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json", // Tipo de conteúdo para envio de arquivo
         },
       });
@@ -37,13 +38,13 @@ export default function AxiosHTTP() {
   };
 
   const POST_FormData = async (complement: string, data: any) => {
-    const token = await getToken();
-    if (!token) throw Error("Token nao encontrado");
+    const { accessToken } = await getTokens();
     try {
+      if (!accessToken) throw Error("Token nao encontrado");
       return await axios.post(`${API_URL}${complement}`, data, {
         headers: {
           Accept: "application/json", // Aceitar resposta em JSON
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
           "Content-Type": "multipart/form-data", // Tipo de conteúdo para envio de arquivo
         },
       });
@@ -54,12 +55,13 @@ export default function AxiosHTTP() {
   };
 
   const GET = async (complement: string) => {
-    const token = await getToken();
+    const { accessToken } = await getTokens();
     try {
+      if (!accessToken) throw Error("Token nao encontrado");
       return await axios.get(`${API_URL}${complement}`, {
         headers: {
           Accept: "application/json", // Aceitar resposta em JSON
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json", // Tipo de conteúdo para envio de arquivo
         },
       });

@@ -10,14 +10,11 @@ import useAsyncStorage from "@/hooks/useSyncStorage";
 
 const useSyncReportsOnline = () => {
   const { GET, POST_FormData } = requestHTPP();
-  const { getToken } = useAsyncStorage();
+  const { getTokens } = useAsyncStorage();
   const getStatusReportOn = async (report: Report) => {
     let status: StatusEnumType | undefined = StatusEnum.REPORTADO;
     try {
       console.log(`Obtendo dados do Report: id->[${report.id}]`);
-
-      const token = await getToken();
-      if (!token) return;
 
       const url = `/report/status/address/${report.address}/geohash/${report.geohash}`;
       const response = await GET(url);
@@ -74,7 +71,8 @@ const useSyncReportsOnline = () => {
       const newReport = report;
       await removeReportOffline(report.id);
       newReport.submit = true;
-      newReport.id = response?.data.report.id;
+      // newReport.id = response?.data.report.id;   // verdadeiro id do report pai para acoplar no report
+      newReport.id = response?.data.report.falseId;
       newReport.address = response?.data.report.address;
       newReport.geohash = response?.data.report.geohash;
       await saveReportOffilne(newReport);

@@ -1,22 +1,30 @@
 import useAsyncStorage from "@/hooks/useSyncStorage";
 import axios from "axios";
+import Toast from "react-native-toast-message";
 
 export default function AxiosHTTP() {
   const API_URL = process.env.EXPO_PUBLIC_URBANIFY_API;
-  const XANO_EXTEND = process.env.EXPO_PUBLIC_XANO_LOGIN || "";
   const { getTokens } = useAsyncStorage();
 
   const Login = async (data: any) => {
     try {
-      console.log(`${API_URL}${XANO_EXTEND}/user/login`);
-      return await axios.post(`${API_URL}${XANO_EXTEND}/user/login`, data, {
+      console.log(`${API_URL}/user/login`);
+      return await axios.post(`${API_URL}/user/login`, data, {
         headers: {
           Accept: "application/json", // Aceitar resposta em JSON
           "Content-Type": "application/json", // Tipo de conteúdo para envio de arquivo
         },
       });
     } catch (err) {
-      console.error("[LOGIN]: ", err);
+      console.error("[AXIOS]: ", err);
+      Toast.show({
+        visibilityTime: 5000,
+        autoHide: true,
+        text1: "AXIOS",
+        text2: `Erro: ${err}`,
+        type: "error",
+        position: "bottom",
+      });
     }
   };
 

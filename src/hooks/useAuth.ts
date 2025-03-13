@@ -25,6 +25,15 @@ export default function useAuth() {
     setErrorEmailOrPassword(false);
     try {
       const response = await Login({ email, password });
+
+      Toast.show({
+        visibilityTime: 5000,
+        autoHide: true,
+        text1: "LOGIN",
+        text2: `Respnose: ${JSON.stringify(response?.data)}`,
+        type: "success",
+        position: "bottom",
+      });
       // 🔹 Salva o token no SecureStore
       if (!response?.data.accessToken) throw new Error("Token not found");
       const { accessToken, refreshToken } = response.data;
@@ -33,6 +42,14 @@ export default function useAuth() {
         await setRole(role);
       } catch (err) {
         console.log("Erro ao extrair role do Token: ", err);
+        Toast.show({
+          visibilityTime: 5000,
+          autoHide: true,
+          text1: "token",
+          text2: `Erro: ${err}`,
+          type: "error",
+          position: "bottom",
+        });
       }
       await setTokens(accessToken, refreshToken);
       setErrorEmailOrPassword(false);
@@ -41,6 +58,14 @@ export default function useAuth() {
       console.error("Error: ", err);
       setLoading(false);
       setErrorEmailOrPassword(true);
+      Toast.show({
+        visibilityTime: 5000,
+        autoHide: true,
+        text1: "LOGIN",
+        text2: `Erro login: ${err}`,
+        type: "error",
+        position: "bottom",
+      });
     } finally {
       setLoading(false);
     }

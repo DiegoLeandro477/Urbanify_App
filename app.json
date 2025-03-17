@@ -21,18 +21,16 @@
         "foregroundImage": "./assets/images/IconProvisorio.png",
         "backgroundColor": "#ffffff"
       },
+      "usesCleartextTraffic": true,
       "package": "com.diegoleandro477.Urbanify"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.png",
+      "usesCleartextTraffic": true
     },
-    "plugins": [
-      "expo-router",
-      "expo-secure-store",
-      "expo-font"
-    ],
+    "plugins": ["expo-router", "expo-secure-store", "expo-font"],
     "experiments": {
       "typedRoutes": true
     },

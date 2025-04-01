@@ -22,6 +22,9 @@ import useAuth from "@/hooks/useAuth";
 import { Button } from "@/components/Button";
 import { SplashScreen } from "expo-router";
 
+//@ts-ignore
+import Logo from "../../assets/images/logo-black.svg";
+
 export default function SignIn() {
   const {
     email,
@@ -67,7 +70,7 @@ export default function SignIn() {
   return (
     <View style={styles.container}>
       <View style={styles.logo}>
-        <Image source={require("../../assets/images/LogoProvisoria.png")} />
+        <Logo width={250} />
         <Text
           style={[
             Font.xs,

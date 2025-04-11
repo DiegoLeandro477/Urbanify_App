@@ -33,6 +33,7 @@ export default function Home() {
     console.log("[HOME-PAGE]");
     loadReports();
   }, []);
+
   // UseEffect para carregar os reports ao iniciar o app
   useEffect(() => {
     if (photo) {

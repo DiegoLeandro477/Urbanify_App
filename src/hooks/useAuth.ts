@@ -27,6 +27,7 @@ export default function useAuth() {
       const response = await Login({ email, password });
       alert(JSON.stringify(response?.data));
       console.log(response);
+      if (!response) return;
       // 🔹 Salva o token no SecureStore
       if (!response?.data.accessToken) throw new Error("Token not found");
       const { accessToken, refreshToken } = response.data;

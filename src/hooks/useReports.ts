@@ -17,6 +17,22 @@ export const useReports = () => {
 
   const [connect, setConnect] = useState<boolean>(false);
 
+  const getLocation = async () => {
+    // Verifica se a permissão de localização foi concedida
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      console.error("Permissão de localização não concedida");
+      return;
+    }
+
+    // Obtém a localização atual
+    const location = await Location.getCurrentPositionAsync({});
+    return {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+    };
+  };
+
   const createReport = async (severity: SeverityEnumType, photo: string) => {
     const now = new Date();
     const formattedDate = now.toLocaleDateString("pt-BR");
@@ -121,5 +137,5 @@ export const useReports = () => {
     }
   }, [connect]);
 
-  return { reports, loadReports, createReport };
+  return { reports, loadReports, createReport, getLocation };
 };

@@ -5,7 +5,6 @@ import requestAxios from "@/utils/requestAxios";
 import Toast from "react-native-toast-message";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import useAsyncStorage from "./useSyncStorage";
-import { Alert } from "react-native";
 
 export default function useAuth() {
   const [email, setEmail] = useState<string>("admin@admin.com");
@@ -25,12 +24,11 @@ export default function useAuth() {
     setErrorEmailOrPassword(false);
     try {
       const response = await Login({ email, password });
-      alert(JSON.stringify(response?.data));
+      const { accessToken, refreshToken } = response?.data;
       console.log(response);
       if (!response) return;
       // 🔹 Salva o token no SecureStore
-      if (!response?.data.accessToken) throw new Error("Token not found");
-      const { accessToken, refreshToken } = response.data;
+      if (!accessToken) throw new Error("Token not found");
       try {
         const { role }: any = jwtDecode(accessToken);
         await setRole(role);

@@ -21,7 +21,6 @@
         "foregroundImage": "./assets/images/IconProvisorio.png",
         "backgroundColor": "#ffffff"
       },
-      "usesCleartextTraffic": true,
       "package": "com.diegoleandro477.Urbanify"
     },
     "web": {

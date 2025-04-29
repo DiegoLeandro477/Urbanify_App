@@ -14,9 +14,9 @@ export default function ProviderRole() {
     const checkRole = async () => {
       try {
         const role = await getRole();
-        if (role === RoleEnum.ADMIN) {
+        if (role === RoleEnum.USER) {
           router.replace("/homePage");
-        } else if (role === RoleEnum.USER) {
+        } else if (role === RoleEnum.ADMIN) {
           router.replace("/adminPage");
         }
       } catch (err) {

@@ -5,7 +5,7 @@ export interface Report {
   id: string;
   image: string;
   severity: SeverityEnumType;
-  coodenates?: { latitude: string; longitude: string };
+  coordinates?: { latitude: string; longitude: string };
   subregion?: string;
   address?: string;
   geohash?: string;

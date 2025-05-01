@@ -7,7 +7,7 @@ import { jwtDecode, JwtPayload } from "jwt-decode";
 import useAsyncStorage from "./useSyncStorage";
 
 export default function useAuth() {
-  const [email, setEmail] = useState<string>("admin@admin.com");
+  const [email, setEmail] = useState<string>("jadson20051965@gmail.com");
   const [password, setPassword] = useState<string>("admin123");
   const [loading, setLoading] = useState<boolean>(false);
   const [errorEmailOrPassword, setErrorEmailOrPassword] =

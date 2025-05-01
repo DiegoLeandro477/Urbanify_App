@@ -18,7 +18,7 @@ export const RenderReport: React.FC<RenderReportProps> = ({ item }) => {
 
   return (
     <>
-      {!item.coodenates ? (
+      {!item.coordinates ? (
         <View style={styles.loading}>
           <ActivityIndicator
             style={[{ position: "absolute", top: 84.4, right: 82.4 }]}

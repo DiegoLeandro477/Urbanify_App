@@ -6,6 +6,7 @@ import { ActivityIndicator, StyleSheet, View } from "react-native";
 const enum RoleEnum {
   ADMIN = "ADMIN",
   USER = "USER",
+  ENGINEER = "ENGINEER",
 }
 
 export default function ProviderRole() {
@@ -16,7 +17,7 @@ export default function ProviderRole() {
         const role = await getRole();
         if (role === RoleEnum.USER) {
           router.replace("/homePage");
-        } else if (role === RoleEnum.ADMIN) {
+        } else if (role === RoleEnum.ENGINEER) {
           router.replace("/adminPage");
         }
       } catch (err) {

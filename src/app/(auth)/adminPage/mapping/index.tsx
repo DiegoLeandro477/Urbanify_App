@@ -6,10 +6,13 @@ import {
   Text,
   View,
 } from "react-native";
-import Map from "react-native-maps";
+import Map, { Circle, Marker } from "react-native-maps";
 import simplifiedMapStyle from "@/utils/simplifiedMapStyle.json";
 import { useReports } from "@/hooks/useReports";
-import { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import MapView from "react-native-maps";
+import { Report } from "@/components/Interfaces/report";
+import useSyncReportsOnline from "@/hooks/useSyncReportsOnline";
 
 interface Coordinates {
   latitude: number;
@@ -18,9 +21,15 @@ interface Coordinates {
 
 export default function Mapping() {
   const { getLocation } = useReports();
+  const { findReportsAvaliable } = useSyncReportsOnline();
   const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
+  const mapRef = useRef<MapView>(null); // Referência para o mapa
+  const [reports, setReports] = useState<Report[]>([]);
 
   useEffect(() => {
+    const findReport = async () => {
+      findReportsAvaliable();
+    };
     const setLoc = async () => {
       console.log("buscando localização");
       const location = await getLocation();
@@ -30,8 +39,20 @@ export default function Mapping() {
       }
       setCoordinates(location);
     };
+    findReport();
     setLoc();
   }, []);
+
+  const handleMarkerPress = (reportCoordinates: Coordinates) => {
+    if (mapRef.current) {
+      const zoomedRegion = {
+        ...reportCoordinates,
+        latitudeDelta: 0.001,
+        longitudeDelta: 0.001,
+      };
+      mapRef.current.animateToRegion(zoomedRegion, 500);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -47,6 +68,7 @@ export default function Mapping() {
         </View>
       ) : (
         <Map
+          ref={mapRef} // Atribua a referência
           style={styles.map}
           customMapStyle={simplifiedMapStyle}
           initialRegion={{
@@ -55,7 +77,43 @@ export default function Mapping() {
             latitudeDelta: 0.005,
             longitudeDelta: 0.005,
           }}
-        />
+        >
+          {/* Marcador da localização atual */}
+          {coordinates && (
+            <Marker
+              coordinate={coordinates}
+              onPress={() => handleMarkerPress(coordinates)}
+            />
+          )}
+
+          {/* Círculos para cada report */}
+          {reports.map((report) => {
+            const reportCoordinates = {
+              latitude: parseFloat(report.coordinates!.latitude),
+              longitude: parseFloat(report.coordinates!.longitude),
+            };
+
+            const circleColor = "red";
+
+            return (
+              <React.Fragment key={report.id}>
+                <Circle
+                  center={reportCoordinates}
+                  radius={50} // Raio em metros
+                  fillColor={`${circleColor}30`} // Cor com 30% de opacidade
+                  strokeColor={circleColor}
+                  strokeWidth={2}
+                />
+
+                {/* Marcador opcional para cada report */}
+                <Marker
+                  coordinate={reportCoordinates}
+                  onPress={() => handleMarkerPress(reportCoordinates)}
+                />
+              </React.Fragment>
+            );
+          })}
+        </Map>
       )}
     </View>
   );

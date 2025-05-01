@@ -64,7 +64,7 @@ export const useReports = () => {
         newReport.street = `${address[0].street || "Undefined"}`;
         newReport.district = `${address[0].district || "Undefined"}`;
         newReport.subregion = `${address[0].subregion || "Undefined"}`;
-        newReport.coodenates = {
+        newReport.coordinates = {
           latitude: currentLocation.coords.latitude.toString(),
           longitude: currentLocation.coords.longitude.toString(),
         };
@@ -99,7 +99,7 @@ export const useReports = () => {
       const reports = await getReports();
       if (!reports) return;
       const reportsOffline = reports.filter(
-        (rep: Report) => rep.submit === false && rep.coodenates
+        (rep: Report) => rep.submit === false && rep.coordinates
       );
       if (reportsOffline.length > 0)
         console.log(`[STORAGE] Reports OFF >> [${reportsOffline.length}]`);

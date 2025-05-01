@@ -6,11 +6,9 @@ import {
 import { SeverityEnum } from "@//constants/severityEnum";
 import { StatusEnum, StatusEnumType } from "@//constants/statusEnum";
 import requestHTPP from "@/utils/requestAxios";
-import useAsyncStorage from "@/hooks/useSyncStorage";
 
 const useSyncReportsOnline = () => {
   const { GET, POST_FormData } = requestHTPP();
-  const { getTokens } = useAsyncStorage();
   const getStatusReportOn = async (report: Report) => {
     let status: StatusEnumType | undefined = StatusEnum.REPORTADO;
     try {
@@ -28,6 +26,17 @@ const useSyncReportsOnline = () => {
     }
   };
 
+  const findReportsAvaliable = async () => {
+    console.log("buscando reports avaliados");
+    try {
+      const response = await GET("/report/evaluated");
+      if (!response) return;
+      console.log("res -> ", JSON.stringify(response?.data, null, 2));
+    } catch (err) {
+      console.log("Error: ", err);
+    }
+  };
+
   const saveReportOnline = async (report: Report) => {
     try {
       console.log("Enviando Report");
@@ -35,8 +44,8 @@ const useSyncReportsOnline = () => {
 
       const data = {
         coordinates: {
-          latitude: report.coodenates?.latitude,
-          longitude: report.coodenates?.longitude,
+          latitude: report.coordinates?.latitude,
+          longitude: report.coordinates?.longitude,
         },
         subregion: report.subregion,
         district: report.district,
@@ -85,6 +94,7 @@ const useSyncReportsOnline = () => {
   return {
     saveReportOnline,
     getStatusReportOn,
+    findReportsAvaliable,
   };
 };
 
